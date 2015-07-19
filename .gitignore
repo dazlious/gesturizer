@@ -1,0 +1,7 @@
+## directories
+.idea/
+.sass-cache/
+node_modules/
+
+## specific files
+*.DS_Store

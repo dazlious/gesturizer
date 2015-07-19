@@ -1,0 +1,42 @@
+{
+    "name": "ActMoveDo",
+    "version": "0.0.1",
+    "author": "Michael Duve",
+    "email": "mduve@designmail.net",
+    "homepage": "https://github.com/dazlious",
+    "url": "https://github.com/dazlious/ActMoveDo",
+    "description": "An extensive framework for gestures and user interactions",
+    "license": {
+        "type": "MIT",
+        "url": "http://www.opensource.org/licenses/mit-license.php"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dazlious/ActMoveDo"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-autoprefixer": "^3.0.3",
+        "grunt-cli": "^0.1.13",
+        "grunt-contrib-compass": "^1.0.3",
+        "grunt-contrib-cssmin": "^0.12.3",
+        "grunt-contrib-uglify": "^0.9.1",
+        "grunt-contrib-watch": "^0.6.1"
+    },
+    "dependencies": {},
+    "bugs": {
+        "url": "https://github.com/dazlious/ActMoveDo/issues"
+    },
+    "keywords": [
+        "gestures",
+        "interactions",
+        "framework",
+        "extension",
+        "pinching",
+        "swiping",
+        "swipe",
+        "pinch",
+        "touch",
+        "movement"
+    ]
+}
