@@ -13,13 +13,75 @@
     <style>
         body {
             margin: 0;
+            width: 100%;
+            height: 100%
+        }
+        .actmovedo {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+        }
+        #actmovedo-0 {
+            top: 0;
+            left: 0;
+            background: green;
+        }
+        #actmovedo-1 {
+            top: 0;
+            right: 0;
+            background: royalblue;
+        }
+        #actmovedo-2 {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            bottom: 0;
+            right: 0;
+            background: yellow;
+        }
+        #actmovedo-3 {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            bottom: 0;
+            left: 0;
+            background: darkred;
         }
     </style>
 
 </head>
 <body>
-    <div id="slide-0" class="picslide"></div>
 
-    <script src="../build/actmovedo.min.js"></script>
+    <div class="test-container">
+
+        <div id="actmovedo-0" class="actmovedo"></div>
+        <div id="actmovedo-1" class="actmovedo"></div>
+        <div id="actmovedo-2"></div>
+        <div id="actmovedo-3"></div>
+
+    </div>
+
+
+
+    <script src="../src/js/actmovedo.js"></script>
+
+    <script>
+        var actMoveDo_instance_1 = new actMoveDo({
+            container: ".actmovedo",
+            pinch: function() {
+                console.log(arguments);
+            }
+        });
+        console.info(actMoveDo_instance_1);
+        var actMoveDo_instance_2 = new actMoveDo({
+            container: "#actmovedo-2"
+        });
+        console.info(actMoveDo_instance_2);
+        var actMoveDo_instance_3 = new actMoveDo({
+            container: "#actmovedo-3"
+        });
+        console.info(actMoveDo_instance_3);
+    </script>
+
 </body>
 </html>
