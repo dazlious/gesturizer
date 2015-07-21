@@ -6,7 +6,7 @@ var actMoveDo = actMoveDo || (function($) {
             this.settings = {
                 container: ".actmovedo",
                 isTouchDevice: this.checkTouch(),
-                isWheelDevice: this.checkScrollWheel(),
+                isMouseDevice: this.checkMouse(),
                 zoom: {
                     min: 0.0,
                     max: 1.0,
@@ -24,10 +24,19 @@ var actMoveDo = actMoveDo || (function($) {
             };
 
             this.settings.eventNames = {
-                "start": this.settings.isTouchDevice ? "touchstart" : "mousedown",
-                "move": this.settings.isTouchDevice ? "touchmove" : "mousemove",
-                "end": this.settings.isTouchDevice ? "touchend" : "mouseup",
-                "scroll": this.getScrollEventName()
+                start: {
+                    touch: "touchstart",
+                    mouse: "mousedown"
+                },
+                move: {
+                    touch: "touchmove",
+                    mouse: "mousemove"
+                },
+                end: {
+                    touch: "touchend",
+                    mouse: "mouseup"
+                },
+                scroll: this.getScrollEventName()
             };
 
             $.extend(this.settings, settings || {});
@@ -47,59 +56,92 @@ var actMoveDo = actMoveDo || (function($) {
         };
 
         ActMoveDo.prototype.bindEvents = function() {
-            var self = this;
 
-            // if no touch device, enable mousewheel listener
-            if (this.settings.isWheelDevice) {
-                this.$container.on(this.settings.eventNames.scroll, function(event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    var e = self.getEvent(event);
 
-                    self.getScrollDirection(e);
-
-                });
+            // if device is touch
+            if (this.settings.isTouchDevice) {
+                this.bindTouchEvents();
             }
 
-            this.$container.on(this.settings.eventNames.start, function(event) {
+            // if device is mouse
+            if (this.settings.isMouseDevice) {
+                this.bindMouseEvents();
+            }
 
-                event.stopPropagation();
-                event.preventDefault();
+        };
 
-                var e = self.getEvent(event);
+        ActMoveDo.prototype.bindTouchEvents = function() {
+            this.$container.on(this.settings.eventNames.start.touch, this.startHandler.bind(this));
+            this.$container.on(this.settings.eventNames.move.touch, this.moveHandler.bind(this));
+            this.$container.on(this.settings.eventNames.end.touch, this.endHandler.bind(this));
+        };
 
-                self.current.downEvent = true;
+        ActMoveDo.prototype.bindMouseEvents = function() {
+            this.$container.on(this.settings.eventNames.scroll, this.scrollHandler.bind(this));
+            this.$container.on(this.settings.eventNames.start.mouse, this.startHandler.bind(this));
+            this.$container.on(this.settings.eventNames.move.mouse, this.moveHandler.bind(this));
+            this.$container.on(this.settings.eventNames.end.mouse, this.endHandler.bind(this));
+        };
 
-                // mouse is used
-                if (e instanceof MouseEvent) {
-                    console.log("mouse down", e);
-                } // touch is used
+        ActMoveDo.prototype.scrollHandler = function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            var e = this.getEvent(event);
+
+            this.getScrollDirection(e);
+        };
+
+        ActMoveDo.prototype.startHandler = function(event) {
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            var e = this.getEvent(event);
+
+            this.current.downEvent = true;
+
+            // mouse is used
+            if (e instanceof MouseEvent) {
+                console.log("mouse down", e);
+            } // touch is used
+            else {
+                // singletouch startet
+                if (e.length <= 1) {
+                    console.log("single touch", e);
+                } // multitouch started
                 else {
-                    // singletouch startet
-                    if (e.length <= 1) {
-                        console.log("single touch", e);
-                    } // multitouch started
-                    else {
-                        console.log("multi touch", e);
+                    console.log("multi touch", e);
 
-                    }
-                    console.log(e);
                 }
-            });
+                console.log(e);
+            }
+        };
 
-            this.$container.on(this.settings.eventNames.move, function(event) {
+        ActMoveDo.prototype.moveHandler = function(event) {
+            // if touchstart event was not fired
+            if (!this.current.downEvent) {
+                return false;
+            }
 
-                event.stopPropagation();
-                event.preventDefault();
+            event.stopPropagation();
+            event.preventDefault();
 
-                var e = self.getEvent(event);
-                
-                if (!self.current.downEvent) {
-                    return false;
-                }
-            });
+            var e = this.getEvent(event);
 
-            };
+            console.log("move", e);
+        };
+
+        ActMoveDo.prototype.endHandler = function(event) {
+
+            this.current.downEvent = false;
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            var e = this.getEvent(event);
+
+            console.log("end", e);
+        };
 
         ActMoveDo.prototype.getScrollDirection = function(event) {
             // down
@@ -114,6 +156,10 @@ var actMoveDo = actMoveDo || (function($) {
 
         ActMoveDo.prototype.checkTouch = function() {
             return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+        };
+
+        ActMoveDo.prototype.checkMouse = function() {
+            return ('onmousedown' in window);
         };
 
         ActMoveDo.prototype.checkScrollWheel = function() {
