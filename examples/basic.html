@@ -67,7 +67,18 @@
 
     <script>
         var actMoveDo_instance_1 = new actMoveDo({
-            container: ".actmovedo"
+            container: ".actmovedo",
+            callbacks: {
+                tap: function(response) {
+                    console.log("tapped", response);
+                },
+                doubletap: function(response) {
+                    console.log("doubletapped", response);
+                },
+                longpress: function(response) {
+                    console.log("longpress", response);
+                }
+            }
         });
         console.info(actMoveDo_instance_1);
         var actMoveDo_instance_2 = new actMoveDo({
