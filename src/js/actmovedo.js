@@ -6,14 +6,20 @@ var actMoveDo = actMoveDo || (function($) {
             this.settings = {
                 container: ".actmovedo",
                 isTouchDevice: this.checkTouch(),
+                isWheelDevice: this.checkScrollWheel(),
                 zoom: {
-                    min: 1.0,
-                    max: 3.0,
-                    initial: 50,
+                    min: 0.0,
+                    max: 1.0,
+                    initial: 0.5,
                     steps: {
                         tap: 0.5,
                         scroll: 0.05
                     }
+                },
+                callbacks: {
+                    pan: null,
+                    flick: null,
+                    zoom: null
                 }
             };
 
@@ -25,6 +31,11 @@ var actMoveDo = actMoveDo || (function($) {
             };
 
             $.extend(this.settings, settings || {});
+
+            this.current = {
+                downEvent: false,
+                start: [0,0]
+            };
 
             this.init();
             this.bindEvents();
@@ -39,38 +50,56 @@ var actMoveDo = actMoveDo || (function($) {
             var self = this;
 
             // if no touch device, enable mousewheel listener
-            if (!this.settings.isTouchDevice) {
+            if (this.settings.isWheelDevice) {
                 this.$container.on(this.settings.eventNames.scroll, function(event) {
                     event.stopPropagation();
                     event.preventDefault();
                     var e = self.getEvent(event);
 
-                    // shift key was not pressed on scroll
-                    if (!e.shiftKey) {
-                        self.getScrollDirection(e);
-                    }
+                    self.getScrollDirection(e);
 
                 });
             }
 
             this.$container.on(this.settings.eventNames.start, function(event) {
+
+                event.stopPropagation();
+                event.preventDefault();
+
                 var e = self.getEvent(event);
+
+                self.current.downEvent = true;
+
                 // mouse is used
-                if (e.originalEvent instanceof MouseEvent) {
-                    console.log(e);
+                if (e instanceof MouseEvent) {
+                    console.log("mouse down", e);
                 } // touch is used
                 else {
                     // singletouch startet
                     if (e.length <= 1) {
-                        console.log("single touch");
+                        console.log("single touch", e);
                     } // multitouch started
                     else {
-                        console.log("multi touch");
+                        console.log("multi touch", e);
+
                     }
                     console.log(e);
                 }
             });
-        };
+
+            this.$container.on(this.settings.eventNames.move, function(event) {
+
+                event.stopPropagation();
+                event.preventDefault();
+
+                var e = self.getEvent(event);
+                
+                if (!self.current.downEvent) {
+                    return false;
+                }
+            });
+
+            };
 
         ActMoveDo.prototype.getScrollDirection = function(event) {
             // down
@@ -86,6 +115,12 @@ var actMoveDo = actMoveDo || (function($) {
         ActMoveDo.prototype.checkTouch = function() {
             return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
         };
+
+        ActMoveDo.prototype.checkScrollWheel = function() {
+            return ("onwheel" in window);
+        };
+
+
 
         ActMoveDo.prototype.getScrollEventName = function() {
             if ('onmousewheel' in window) {
