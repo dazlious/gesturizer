@@ -196,7 +196,16 @@ var actMoveDo = actMoveDo || (function($) {
             this.current.speed = currentDist * (currentTime - lastTime);
             this.current.move = currentPos;
 
-            this.eventCallback(this.settings.callbacks.pan, [this.current.target, this.current.start, this.current.move, this.current.speed]);
+            this.eventCallback(this.settings.callbacks.pan, {
+                target: this.current.target,
+                positions: {
+                    start: this.current.start,
+                    current: this.current.move,
+                    last: lastPos
+                },
+                distanceToLastPoint: currentDist,
+                speed: this.current.speed
+            });
 
         };
 
@@ -215,13 +224,23 @@ var actMoveDo = actMoveDo || (function($) {
                 switch(this.current.lastAction) {
                     case "tap":
                         if (timeDiff < this.settings.timeTreshold.longpress) {
-                            this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.timeTreshold.tap, this.current.target, this.current.start);
+                            this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.timeTreshold.tap, {
+                                target: this.current.target,
+                                positions: {
+                                    start: this.current.start
+                                }
+                            });
                         } else {
                             this.eventCallback(this.settings.callbacks.longpress, [this.current.target, this.current.start]);
                         }
                         break;
                     case "doubletap":
-                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, this.current.target, this.current.start);
+                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
+                            target: this.current.target,
+                            positions: {
+                                start: this.current.start
+                            }
+                        });
                         break;
                     default:
                         this.current.lastAction = null;
@@ -239,14 +258,7 @@ var actMoveDo = actMoveDo || (function($) {
             this.current.multitouch = false;
         };
 
-        ActMoveDo.prototype.setTimeoutForEvent = function(callback, timeout) {
-            var self = this;
-
-            var args = [];
-            for (var i = 2; i < arguments.length; i++) {
-                args[i-2] = arguments[i];
-            }
-
+        ActMoveDo.prototype.setTimeoutForEvent = function(callback, timeout, args) {
             this.current.timeout = setTimeout(this.eventCallback.bind(this, callback, args), timeout);
         };
 
