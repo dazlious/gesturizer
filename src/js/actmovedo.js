@@ -168,6 +168,7 @@ var actMoveDo = actMoveDo || (function($) {
             }
 
             this.current.hasMoved = true;
+            this.current.lastAction = "move";
 
             event.stopPropagation();
             event.preventDefault();
@@ -201,7 +202,13 @@ var actMoveDo = actMoveDo || (function($) {
                         this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.treshold.doubletap, this.current.target, this.current.start);
                         break;
                     default:
-                        break;
+                        this.current.lastAction = null;
+                }
+            }
+            else if (this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
+                switch(this.current.lastAction) {
+                    default:
+                        this.current.lastAction = null;
                 }
             }
 
