@@ -192,8 +192,9 @@ var actMoveDo = actMoveDo || (function($) {
             }
 
             currentDist = this.getDistance(lastPos, currentPos);
+            var timeDiff = (currentTime - lastTime);
 
-            this.current.speed = currentDist * (currentTime - lastTime);
+            this.current.speed = (currentDist / timeDiff) * 1000;
             this.current.move = currentPos;
 
             this.eventCallback(this.settings.callbacks.pan, {
@@ -202,6 +203,10 @@ var actMoveDo = actMoveDo || (function($) {
                     start: this.current.start,
                     current: this.current.move,
                     last: lastPos
+                },
+                timeElapsed: {
+                    sinceLast: timeDiff,
+                    sinceStart: currentTime - this.current.timeStart
                 },
                 distanceToLastPoint: currentDist,
                 speed: this.current.speed
