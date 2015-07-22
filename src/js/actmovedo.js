@@ -1,5 +1,5 @@
-var actMoveDo = actMoveDo || (function($) {
-    "use strict";
+var actMoveDo = actMoveDo || (function ($) {
+        "use strict";
 
         function ActMoveDo(settings) {
 
@@ -12,7 +12,7 @@ var actMoveDo = actMoveDo || (function($) {
                     max: 1.0,
                     initial: 0.5,
                     steps: {
-                        tap: 0.5,
+                        tap: 0.2,
                         scroll: 0.05
                     }
                 },
@@ -20,10 +20,10 @@ var actMoveDo = actMoveDo || (function($) {
                     tap: 200,
                     doubletap: 200,
                     longpress: 500,
-                    swipe: 300
+                    swipeFlick: 300
                 },
                 distanceTreshold: {
-                    swipe: 100
+                    swipeFlick: 100
                 },
                 callbacks: {
                     tap: null,
@@ -69,11 +69,11 @@ var actMoveDo = actMoveDo || (function($) {
 
         }
 
-        ActMoveDo.prototype.init = function() {
+        ActMoveDo.prototype.init = function () {
             this.$container = $(this.settings.container);
         };
 
-        ActMoveDo.prototype.bindEvents = function() {
+        ActMoveDo.prototype.bindEvents = function () {
 
             // if device is touch
             if (this.settings.isTouchDevice) {
@@ -87,34 +87,27 @@ var actMoveDo = actMoveDo || (function($) {
 
         };
 
-        ActMoveDo.prototype.bindTouchEvents = function() {
+        ActMoveDo.prototype.bindTouchEvents = function () {
             this.$container.on(this.settings.eventNames.start.touch, this.startHandler.bind(this));
             this.$container.on(this.settings.eventNames.move.touch, this.moveHandler.bind(this));
             this.$container.on(this.settings.eventNames.end.touch, this.endHandler.bind(this));
         };
 
-        ActMoveDo.prototype.bindMouseEvents = function() {
+        ActMoveDo.prototype.bindMouseEvents = function () {
             this.$container.on(this.settings.eventNames.scroll, this.scrollHandler.bind(this));
             this.$container.on(this.settings.eventNames.start.mouse, this.startHandler.bind(this));
             this.$container.on(this.settings.eventNames.move.mouse, this.moveHandler.bind(this));
             this.$container.on(this.settings.eventNames.end.mouse, this.endHandler.bind(this));
-            /* maybe later for fixing leaving the window
-            this.$container.on("mouseleave", (function(e) {
-                this.current.downEvent = false;
-            }).bind(this));
-             */
         };
 
-
-        ActMoveDo.prototype.scrollHandler = function(event) {
+        ActMoveDo.prototype.scrollHandler = function (event) {
             event.stopPropagation();
             event.preventDefault();
             var e = this.getEvent(event);
-
             this.getScrollDirection(e);
         };
 
-        ActMoveDo.prototype.startHandler = function(event) {
+        ActMoveDo.prototype.startHandler = function (event) {
 
             event.stopPropagation();
             event.preventDefault();
@@ -142,11 +135,11 @@ var actMoveDo = actMoveDo || (function($) {
                     this.current.multitouch = true;
                     var pos1 = this.getRelativePosition(e[0]),
                         pos2 = this.getRelativePosition(e[1]);
-                    this.current.distance = this.getDistance(pos1, pos2)
+                    this.current.distance = this.getDistance(pos1, pos2);
                     this.current.start = [(pos1[0] + pos2[0]) / 2, (pos1[1] + pos2[1]) / 2];
                 }
             }
-            switch(this.current.lastAction) {
+            switch (this.current.lastAction) {
                 case null:
                     this.current.lastAction = "tap";
                     break;
@@ -160,7 +153,7 @@ var actMoveDo = actMoveDo || (function($) {
             console.log(this.current);
         };
 
-        ActMoveDo.prototype.moveHandler = function(event) {
+        ActMoveDo.prototype.moveHandler = function (event) {
             // if touchstart event was not fired
             if (!this.current.downEvent) {
                 return false;
@@ -173,8 +166,8 @@ var actMoveDo = actMoveDo || (function($) {
             event.preventDefault();
 
             var e = this.getEvent(event),
-                currentPos = null,
-                currentDist = null,
+                currentPos,
+                currentDist,
                 lastPos = (this.current.move) ? this.current.move : this.current.start,
                 lastTime = (this.current.time) ? this.current.time : this.current.timeStart,
                 currentTime = event.timeStamp;
@@ -214,7 +207,7 @@ var actMoveDo = actMoveDo || (function($) {
 
         };
 
-        ActMoveDo.prototype.endHandler = function(event) {
+        ActMoveDo.prototype.endHandler = function (event) {
 
             event.stopPropagation();
             event.preventDefault();
@@ -225,25 +218,43 @@ var actMoveDo = actMoveDo || (function($) {
 
             var timeDiff = this.current.timeEnd - this.current.timeStart;
 
+            if (e instanceof MouseEvent) {
+                this.current.end = this.getRelativePosition(e);
+            } // touch is used
+            else {
+                // singletouch startet
+                if (e.length <= 1) {
+                    this.current.end = this.getRelativePosition(e[0]);
+                }
+            }
+
             if (!this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
-                switch(this.current.lastAction) {
+                switch (this.current.lastAction) {
                     case "tap":
                         if (timeDiff < this.settings.timeTreshold.longpress) {
                             this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.timeTreshold.tap, {
                                 target: this.current.target,
                                 positions: {
-                                    start: this.current.start
+                                    start: this.current.start,
+                                    end: this.current.end
                                 }
                             });
                         } else {
-                            this.eventCallback(this.settings.callbacks.longpress, [this.current.target, this.current.start]);
+                            this.eventCallback(this.settings.callbacks.longpress, {
+                                target: this.current.target,
+                                positions: {
+                                    start: this.current.start,
+                                    end: this.current.end
+                                }
+                            });
                         }
                         break;
                     case "doubletap":
                         this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
                             target: this.current.target,
                             positions: {
-                                start: this.current.start
+                                start: this.current.start,
+                                end: this.current.end
                             }
                         });
                         break;
@@ -252,7 +263,7 @@ var actMoveDo = actMoveDo || (function($) {
                 }
             }
             else if (this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
-                switch(this.current.lastAction) {
+                switch (this.current.lastAction) {
                     default:
                         this.current.lastAction = null;
                 }
@@ -263,18 +274,18 @@ var actMoveDo = actMoveDo || (function($) {
             this.current.multitouch = false;
         };
 
-        ActMoveDo.prototype.setTimeoutForEvent = function(callback, timeout, args) {
+        ActMoveDo.prototype.setTimeoutForEvent = function (callback, timeout, args) {
             this.current.timeout = setTimeout(this.eventCallback.bind(this, callback, args), timeout);
         };
 
-        ActMoveDo.prototype.eventCallback = function(callback, args) {
+        ActMoveDo.prototype.eventCallback = function (callback, args) {
             if (callback) {
                 callback(args);
             }
             this.current.lastAction = null;
         };
 
-        ActMoveDo.prototype.getRelativePosition = function(e) {
+        ActMoveDo.prototype.getRelativePosition = function (e) {
             var target = e.target || e.srcElement,
                 clientBounds = target.getBoundingClientRect(),
                 x = (e.clientX - clientBounds.left) / clientBounds.width,
@@ -282,38 +293,39 @@ var actMoveDo = actMoveDo || (function($) {
             return [x, y];
         };
 
-        ActMoveDo.prototype.getDistance = function(point1, point2) {
+        ActMoveDo.prototype.getDistance = function (point1, point2) {
             var a = point1[0] - point2[0],
                 b = point1[1] - point2[1];
             return Math.sqrt(a * a + b * b);
         };
 
-        ActMoveDo.prototype.getScrollDirection = function(event) {
+        ActMoveDo.prototype.getScrollDirection = function (event) {
+            var axis = parseInt(event.axis, 10);
             // down
-            if ((event.deltaY > 0) || ((event.axis === 2) && (event.detail > 0))) {
+            if ((event.deltaY > 0) || ((axis === 2) && (event.detail > 0))) {
                 console.log("down");
             }
             // up
-            else if ((event.deltaY < 0) || ((event.axis === 2) && (event.detail < 0))) {
+            else if ((event.deltaY < 0) || ((axis === 2) && (event.detail < 0))) {
                 console.log("up");
             }
         };
 
-        ActMoveDo.prototype.checkTouch = function() {
+        ActMoveDo.prototype.checkTouch = function () {
+            if (!navigator.MaxTouchPoints) {
+                navigator.MaxTouchPoints = 0;
+            }
+            if (!navigator.msMaxTouchPoints) {
+                navigator.msMaxTouchPoints = 0;
+            }
             return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
         };
 
-        ActMoveDo.prototype.checkMouse = function() {
+        ActMoveDo.prototype.checkMouse = function () {
             return ('onmousedown' in window);
         };
 
-        ActMoveDo.prototype.checkScrollWheel = function() {
-            return ("onwheel" in window);
-        };
-
-
-
-        ActMoveDo.prototype.getScrollEventName = function() {
+        ActMoveDo.prototype.getScrollEventName = function () {
             if ('onmousewheel' in window) {
                 return "mousewheel";
             } else {
@@ -321,11 +333,17 @@ var actMoveDo = actMoveDo || (function($) {
             }
         };
 
-        ActMoveDo.prototype.getEvent = function(e) {
+        ActMoveDo.prototype.getEvent = function (e) {
+            if (!e.originalEvent.touches) {
+                e.originalEvent.touches = undefined;
+            }
+            if (!e.originalEvent.changedTouches) {
+                e.originalEvent.changedTouches = undefined;
+            }
             jQuery.event.fix(e);
             return e.originalEvent.touches || e.originalEvent.changedTouches || e.originalEvent;
         };
 
-    return ActMoveDo;
+        return ActMoveDo;
 
-}(jQuery));
+    }(jQuery));
