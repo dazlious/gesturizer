@@ -16,10 +16,14 @@ var actMoveDo = actMoveDo || (function($) {
                         scroll: 0.05
                     }
                 },
-                treshold: {
+                timeTreshold: {
                     tap: 200,
                     doubletap: 200,
-                    longpress: 500
+                    longpress: 500,
+                    swipe: 300
+                },
+                distanceTreshold: {
+                    swipe: 100
                 },
                 callbacks: {
                     tap: null,
@@ -138,13 +142,8 @@ var actMoveDo = actMoveDo || (function($) {
                     this.current.multitouch = true;
                     var pos1 = this.getRelativePosition(e[0]),
                         pos2 = this.getRelativePosition(e[1]);
-
-                    // using pythagoras calculating center
-                    var a = pos1[0] - pos2[0],
-                        b = pos1[1] - pos2[1];
-
+                    this.current.distance = this.getDistance(pos1, pos2)
                     this.current.start = [(pos1[0] + pos2[0]) / 2, (pos1[1] + pos2[1]) / 2];
-                    this.current.distance = Math.sqrt(a * a + b * b);
                 }
             }
             switch(this.current.lastAction) {
@@ -173,9 +172,32 @@ var actMoveDo = actMoveDo || (function($) {
             event.stopPropagation();
             event.preventDefault();
 
-            var e = this.getEvent(event);
+            var e = this.getEvent(event),
+                currentPos = null,
+                currentDist = null,
+                lastPos = (this.current.move) ? this.current.move : this.current.start,
+                lastTime = (this.current.time) ? this.current.time : this.current.timeStart,
+                currentTime = event.timeStamp;
 
-            console.log("move", e);
+            this.current.time = event.timeStamp;
+
+            if (e instanceof MouseEvent) {
+                currentPos = this.getRelativePosition(e);
+            } // touch is used
+            else {
+                // singletouch startet
+                if (e.length <= 1) {
+                    currentPos = this.getRelativePosition(e[0]);
+                }
+            }
+
+            currentDist = this.getDistance(lastPos, currentPos);
+
+            this.current.speed = currentDist * (currentTime - lastTime);
+            this.current.move = currentPos;
+
+            this.eventCallback(this.settings.callbacks.pan, [this.current.target, this.current.start, this.current.move, this.current.speed]);
+
         };
 
         ActMoveDo.prototype.endHandler = function(event) {
@@ -192,14 +214,14 @@ var actMoveDo = actMoveDo || (function($) {
             if (!this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
                 switch(this.current.lastAction) {
                     case "tap":
-                        if (timeDiff < this.settings.treshold.longpress) {
-                            this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.treshold.tap, this.current.target, this.current.start);
+                        if (timeDiff < this.settings.timeTreshold.longpress) {
+                            this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.timeTreshold.tap, this.current.target, this.current.start);
                         } else {
                             this.eventCallback(this.settings.callbacks.longpress, [this.current.target, this.current.start]);
                         }
                         break;
                     case "doubletap":
-                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.treshold.doubletap, this.current.target, this.current.start);
+                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, this.current.target, this.current.start);
                         break;
                     default:
                         this.current.lastAction = null;
@@ -241,6 +263,12 @@ var actMoveDo = actMoveDo || (function($) {
                 x = (e.clientX - clientBounds.left) / clientBounds.width,
                 y = (e.clientY - clientBounds.top) / clientBounds.height;
             return [x, y];
+        };
+
+        ActMoveDo.prototype.getDistance = function(point1, point2) {
+            var a = point1[0] - point2[0],
+                b = point1[1] - point2[1];
+            return Math.sqrt(a * a + b * b);
         };
 
         ActMoveDo.prototype.getScrollDirection = function(event) {
