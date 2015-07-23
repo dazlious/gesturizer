@@ -11,10 +11,11 @@ var actMoveDo = actMoveDo || (function ($) {
                     tap: 200,
                     doubletap: 200,
                     hold: 500,
-                    swipeFlick: 300
+                    swipe: 300,
+                    flick: 50
                 },
                 distanceTreshold: {
-                    swipeFlick: 180
+                    swipe: 180
                 },
                 autoFireHold: null,
                 callbacks: {
@@ -299,7 +300,9 @@ var actMoveDo = actMoveDo || (function ($) {
 
             this.current.timeEnd = event.timeStamp;
 
-            var timeDiff = this.current.timeEnd - this.current.timeStart;
+            var timeDiff = this.current.timeEnd - this.current.timeStart,
+                timeDiffToLastMove = this.current.timeEnd - this.current.time;
+
 
             if (this.current.holdTimeout) {
                 this.current.holdTimeout = clearTimeout(this.current.holdTimeout);
@@ -315,6 +318,7 @@ var actMoveDo = actMoveDo || (function ($) {
                 }
             }
 
+            // called only when not moved
             if (!this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
                 switch (this.current.lastAction) {
                     case "tap":
@@ -357,6 +361,7 @@ var actMoveDo = actMoveDo || (function ($) {
                         this.current.lastAction = null;
                 }
             }
+            // if was moved
             else if (this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
 
                 if (this.settings.callbacks.swipe || this.settings.callbacks.flick) {
@@ -374,12 +379,10 @@ var actMoveDo = actMoveDo || (function ($) {
                         distance = this.getDistance(this.current.end, this.current.start),
                         speed = this.calculateSpeed(distance, timeDiff);
 
-                    if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipeFlick) {
+                    if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipe) {
                         var originalStart = this.getAbsolutePosition(event.target||event.srcElement, this.current.start),
                             originalEnd = this.getAbsolutePosition(event.target||event.srcElement, this.current.end);
-                        console.log(this.getDistance(originalEnd, originalStart));
-
-                        if (this.getDistance(originalEnd, originalStart) >= this.settings.distanceTreshold.swipeFlick) {
+                        if (this.getDistance(originalEnd, originalStart) >= this.settings.distanceTreshold.swipe) {
                             var directions = this.getSwipeDirections(directionNormalized);
                             this.eventCallback(this.settings.callbacks.swipe, {
                                 positions: {
@@ -395,7 +398,8 @@ var actMoveDo = actMoveDo || (function ($) {
                         }
                     }
 
-                    if (this.settings.callbacks.flick) {
+                    console.log(timeDiffToLastMove, this.settings.timeTreshold.flick);
+                    if (this.settings.callbacks.flick && (timeDiffToLastMove <= this.settings.timeTreshold.flick)) {
                         this.eventCallback(this.settings.callbacks.flick, {
                             speed: speed,
                             direction: directionNormalized,
