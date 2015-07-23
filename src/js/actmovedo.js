@@ -507,12 +507,6 @@ var actMoveDo = actMoveDo || (function ($) {
         };
 
         ActMoveDo.prototype.checkTouch = function () {
-            if (!navigator.MaxTouchPoints) {
-                navigator.MaxTouchPoints = 0;
-            }
-            if (!navigator.msMaxTouchPoints) {
-                navigator.msMaxTouchPoints = 0;
-            }
             return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
         };
 
@@ -521,21 +515,12 @@ var actMoveDo = actMoveDo || (function ($) {
         };
 
         ActMoveDo.prototype.getScrollEventName = function () {
-            if (!document.onmousewheel) {
-                document.onmousewheel = undefined;
-            }
             return "onwheel" in document.createElement("div") ? "wheel" :
                 document.onmousewheel !== undefined ? "mousewheel" :
                     "DOMMouseScroll";
         };
 
         ActMoveDo.prototype.getEvent = function (e) {
-            if (!e.originalEvent.touches) {
-                e.originalEvent.touches = undefined;
-            }
-            if (!e.originalEvent.changedTouches) {
-                e.originalEvent.changedTouches = undefined;
-            }
             jQuery.event.fix(e);
             // fixing end event has no more touches
             if (e.originalEvent.touches && e.originalEvent.touches.length === 0) {
