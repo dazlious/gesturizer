@@ -10,7 +10,7 @@ var actMoveDo = actMoveDo || (function ($) {
                 timeTreshold: {
                     tap: 200,
                     doubletap: 200,
-                    longpress: 500,
+                    hold: 500,
                     swipeFlick: 300
                 },
                 distanceTreshold: {
@@ -18,9 +18,9 @@ var actMoveDo = actMoveDo || (function ($) {
                 },
                 callbacks: {
                     tap: null,
-                    tapLongpress: null,
+                    tapHold: null,
                     doubletap: null,
-                    longpress: null,
+                    hold: null,
                     pan: null,
                     swipe: null,
                     flick: null,
@@ -289,7 +289,7 @@ var actMoveDo = actMoveDo || (function ($) {
             if (!this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
                 switch (this.current.lastAction) {
                     case "tap":
-                        if (timeDiff < this.settings.timeTreshold.longpress) {
+                        if (timeDiff < this.settings.timeTreshold.hold) {
                             this.setTimeoutForEvent(this.settings.callbacks.tap, this.settings.timeTreshold.tap, {
                                 target: this.current.target,
                                 positions: {
@@ -298,7 +298,7 @@ var actMoveDo = actMoveDo || (function ($) {
                                 }
                             });
                         } else {
-                            this.eventCallback(this.settings.callbacks.longpress, {
+                            this.eventCallback(this.settings.callbacks.hold, {
                                 target: this.current.target,
                                 positions: {
                                     start: this.current.start,
@@ -308,7 +308,7 @@ var actMoveDo = actMoveDo || (function ($) {
                         }
                         break;
                     case "doubletap":
-                        if (timeDiff < this.settings.timeTreshold.longpress) {
+                        if (timeDiff < this.settings.timeTreshold.hold) {
                             this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
                                 target: this.current.target,
                                 positions: {
@@ -317,7 +317,7 @@ var actMoveDo = actMoveDo || (function ($) {
                                 }
                             });
                         } else {
-                            this.eventCallback(this.settings.callbacks.tapLongpress, {
+                            this.eventCallback(this.settings.callbacks.tapHold, {
                                 target: this.current.target,
                                 positions: {
                                     start: this.current.start,
