@@ -14,7 +14,7 @@ var actMoveDo = actMoveDo || (function ($) {
                     swipeFlick: 300
                 },
                 distanceTreshold: {
-                    swipeFlick: 200
+                    swipeFlick: 180
                 },
                 callbacks: {
                     tap: null,
@@ -348,7 +348,11 @@ var actMoveDo = actMoveDo || (function ($) {
                         speed = this.calculateSpeed(distance, timeDiff);
 
                     if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipeFlick) {
-                        if (distance <= this.settings.distanceTreshold.swipeFlick) {
+                        var originalStart = this.getAbsolutePosition(event.target||event.srcElement, this.current.start),
+                            originalEnd = this.getAbsolutePosition(event.target||event.srcElement, this.current.end);
+                        console.log(this.getDistance(originalEnd, originalStart));
+
+                        if (this.getDistance(originalEnd, originalStart) >= this.settings.distanceTreshold.swipeFlick) {
                             var directions = this.getSwipeDirections(directionNormalized);
                             this.eventCallback(this.settings.callbacks.swipe, {
                                 positions: {
@@ -428,6 +432,13 @@ var actMoveDo = actMoveDo || (function ($) {
                 clientBounds = target.getBoundingClientRect(),
                 x = (e.clientX - clientBounds.left) / clientBounds.width,
                 y = (e.clientY - clientBounds.top) / clientBounds.height;
+            return [x, y];
+        };
+
+        ActMoveDo.prototype.getAbsolutePosition = function (target, point) {
+            var clientBounds = target.getBoundingClientRect(),
+                x = point[0] * clientBounds.width,
+                y = point[1] * clientBounds.height;
             return [x, y];
         };
 
