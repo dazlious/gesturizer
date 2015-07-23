@@ -89,6 +89,15 @@
                 },
                 flick: function(response) {
                     console.log("flick", response);
+                },
+                wheel: function(response) {
+                    console.log("wheel", response);
+                },
+                zoom: function(response) {
+                    console.log("zoom", response.direction, response.factor);
+                },
+                pinch: function(response) {
+                    console.log("pinch", response);
                 }
             }
         });
