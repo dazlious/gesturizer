@@ -27,10 +27,12 @@ var actMoveDo = actMoveDo || (function ($) {
                 },
                 callbacks: {
                     tap: null,
+                    tapLongpress: null,
                     doubletap: null,
                     longpress: null,
                     pan: null,
-                    swipeFlick: null,
+                    swipe: null,
+                    flick: null,
                     zoom: null
                 }
             };
@@ -59,6 +61,9 @@ var actMoveDo = actMoveDo || (function ($) {
                 multitouch: false,
                 lastAction: null,
                 start: null,
+                move: null,
+                end: null,
+                time: null,
                 timeStart: null,
                 timeEnd: null,
                 timeout: null
@@ -149,8 +154,6 @@ var actMoveDo = actMoveDo || (function ($) {
                 default:
                     break;
             }
-
-            console.log(this.current);
         };
 
         ActMoveDo.prototype.moveHandler = function (event) {
@@ -187,7 +190,9 @@ var actMoveDo = actMoveDo || (function ($) {
             currentDist = this.getDistance(lastPos, currentPos);
             var timeDiff = (currentTime - lastTime);
 
-            this.current.speed = (currentDist / timeDiff) * 100;
+            this.current.speed = this.calculateSpeed(currentDist, timeDiff);
+
+            this.current.oldMove = this.current.move;
             this.current.move = currentPos;
 
             this.eventCallback(this.settings.callbacks.pan, {
@@ -250,40 +255,74 @@ var actMoveDo = actMoveDo || (function ($) {
                         }
                         break;
                     case "doubletap":
-                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
-                            target: this.current.target,
-                            positions: {
-                                start: this.current.start,
-                                end: this.current.end
-                            }
-                        });
+                        if (timeDiff < this.settings.timeTreshold.longpress) {
+                            this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
+                                target: this.current.target,
+                                positions: {
+                                    start: this.current.start,
+                                    end: this.current.end
+                                }
+                            });
+                        } else {
+                            this.eventCallback(this.settings.callbacks.tapLongpress, {
+                                target: this.current.target,
+                                positions: {
+                                    start: this.current.start,
+                                    end: this.current.end
+                                }
+                            });
+                        }
                         break;
                     default:
                         this.current.lastAction = null;
                 }
             }
             else if (this.current.hasMoved && this.current.downEvent && !this.current.multitouch) {
-                // swipe/flick could happened
-                if (timeDiff <= this.settings.timeTreshold.swipeFlick) {
-                    var direction = [this.current.end[0] - this.current.start[0], this.current.end[1] - this.current.start[1]],
-                        vLDirection = this.vectorLength(direction),
+
+                if (this.settings.callbacks.swipe || this.settings.callbacks.flick) {
+
+                    var direction;
+
+                    if (this.settings.callbacks.swipe) {
+                        direction = [this.current.end[0] - this.current.start[0], this.current.end[1] - this.current.start[1]];
+                    } else if (this.settings.callbacks.flick) {
+                        direction = [this.current.end[0] - this.current.oldMove[0], this.current.end[1] - this.current.oldMove[1]];
+                    }
+
+                    var vLDirection = this.vectorLength(direction),
                         directionNormalized = [direction[0] / vLDirection, direction[1] / vLDirection],
-                        distance = this.getDistance(this.current.end, this.current.start);
+                        distance = this.getDistance(this.current.end, this.current.start),
+                        speed = this.calculateSpeed(distance, timeDiff);
 
-                    // definitely happend
-                    if (distance <= this.settings.distanceTreshold.swipeFlick) {
-                        var directions = this.getSwipeDirections(directionNormalized),
-                            speed = (distance / timeDiff) * 100;
+                    if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipeFlick) {
+                        if (distance <= this.settings.distanceTreshold.swipeFlick) {
+                            var directions = this.getSwipeDirections(directionNormalized);
+                            this.eventCallback(this.settings.callbacks.swipe, {
+                                positions: {
+                                    start: this.current.start,
+                                    end: this.current.end
+                                },
+                                speed: speed,
+                                directions: {
+                                    named: directions,
+                                    detailed: directionNormalized
+                                }
+                            });
+                        }
+                    }
 
-                        this.eventCallback(this.settings.callbacks.swipeFlick, {
+                    if (this.settings.callbacks.flick) {
+                        this.eventCallback(this.settings.callbacks.flick, {
                             speed: speed,
-                            directions: {
-                                named: directions,
-                                detailed: directionNormalized
+                            direction: directionNormalized,
+                            positions: {
+                                start: this.current.start,
+                                end: this.current.end
                             }
                         });
                     }
                 }
+
                 switch (this.current.lastAction) {
                     default:
                         this.current.lastAction = null;
@@ -293,6 +332,10 @@ var actMoveDo = actMoveDo || (function ($) {
             this.current.downEvent = false;
             this.current.hasMoved = false;
             this.current.multitouch = false;
+        };
+
+        ActMoveDo.prototype.calculateSpeed = function(distance, time) {
+            return (distance / time) * 100;
         };
 
         ActMoveDo.prototype.getSwipeDirections = function (direction) {

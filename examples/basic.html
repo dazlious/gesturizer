@@ -75,26 +75,32 @@
                 doubletap: function(response) {
                     console.log("doubletapped", response);
                 },
+                tapLongpress: function(response) {
+                    console.log("tap and longpressed", response);
+                },
                 longpress: function(response) {
                     console.log("longpress", response);
                 },
                 pan: function(response) {
                     console.log("pan", response);
                 },
-                swipeFlick: function(response) {
-                    console.log("swipe/flick", response);
+                swipe: function(response) {
+                    console.log("swipe", response);
+                },
+                flick: function(response) {
+                    console.log("flick", response);
                 }
             }
         });
-        console.info(actMoveDo_instance_1);
         var actMoveDo_instance_2 = new actMoveDo({
-            container: "#actmovedo-2"
+            container: "#actmovedo-2",
+            pan: function(response) {
+                console.log("pan", response);
+            }
         });
-        console.info(actMoveDo_instance_2);
         var actMoveDo_instance_3 = new actMoveDo({
             container: "#actmovedo-3"
         });
-        console.info(actMoveDo_instance_3);
     </script>
 
 </body>
