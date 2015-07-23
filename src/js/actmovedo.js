@@ -387,7 +387,7 @@ var actMoveDo = actMoveDo || (function ($) {
             this.current.multitouch = false;
         };
 
-        ActMoveDo.prototype.calculateSpeed = function(distance, time) {
+        ActMoveDo.prototype.calculateSpeed = function (distance, time) {
             return (distance / time) * 100;
         };
 
@@ -481,7 +481,7 @@ var actMoveDo = actMoveDo || (function ($) {
             }
             return "onwheel" in document.createElement("div") ? "wheel" :
                 document.onmousewheel !== undefined ? "mousewheel" :
-                        "DOMMouseScroll";
+                    "DOMMouseScroll";
         };
 
         ActMoveDo.prototype.getEvent = function (e) {
