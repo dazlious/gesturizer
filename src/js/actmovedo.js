@@ -380,8 +380,8 @@ var actMoveDo = actMoveDo || (function ($) {
                         speed = this.calculateSpeed(distance, timeDiff);
 
                     if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipe) {
-                        var originalStart = this.getAbsolutePosition(event.target||event.srcElement, this.current.start),
-                            originalEnd = this.getAbsolutePosition(event.target||event.srcElement, this.current.end);
+                        var originalStart = this.getAbsolutePosition(event.target || event.srcElement, this.current.start),
+                            originalEnd = this.getAbsolutePosition(event.target || event.srcElement, this.current.end);
                         if (this.getDistance(originalEnd, originalStart) >= this.settings.distanceTreshold.swipe) {
                             var directions = this.getSwipeDirections(directionNormalized);
                             this.eventCallback(this.settings.callbacks.swipe, {
@@ -398,7 +398,6 @@ var actMoveDo = actMoveDo || (function ($) {
                         }
                     }
 
-                    console.log(timeDiffToLastMove, this.settings.timeTreshold.flick);
                     if (this.settings.callbacks.flick && (timeDiffToLastMove <= this.settings.timeTreshold.flick)) {
                         this.eventCallback(this.settings.callbacks.flick, {
                             speed: speed,
