@@ -72,6 +72,7 @@ var actMoveDo = actMoveDo || (function ($) {
 
         ActMoveDo.prototype.init = function () {
             this.$container = $(this.settings.container);
+            this.container = $(this.settings.container)[0];
         };
 
         ActMoveDo.prototype.bindEvents = function () {
@@ -125,7 +126,6 @@ var actMoveDo = actMoveDo || (function ($) {
                     factor: (directions.indexOf("up") > -1) ? 1 : (directions.indexOf("down") > -1) ? -1 : 0
                 });
             }
-
         };
 
         ActMoveDo.prototype.startHandler = function (event) {
@@ -380,8 +380,8 @@ var actMoveDo = actMoveDo || (function ($) {
                         speed = this.calculateSpeed(distance, timeDiff);
 
                     if (this.settings.callbacks.swipe && timeDiff <= this.settings.timeTreshold.swipe) {
-                        var originalStart = this.getAbsolutePosition(event.target || event.srcElement, this.current.start),
-                            originalEnd = this.getAbsolutePosition(event.target || event.srcElement, this.current.end);
+                        var originalStart = this.getAbsolutePosition(this.container, this.current.start),
+                            originalEnd = this.getAbsolutePosition(this.container, this.current.end);
                         if (this.getDistance(originalEnd, originalStart) >= this.settings.distanceTreshold.swipe) {
                             var directions = this.getSwipeDirections(directionNormalized);
                             this.eventCallback(this.settings.callbacks.swipe, {
@@ -462,7 +462,7 @@ var actMoveDo = actMoveDo || (function ($) {
         };
 
         ActMoveDo.prototype.getRelativePosition = function (e) {
-            var target = e.target || e.srcElement,
+            var target = this.container,
                 clientBounds = target.getBoundingClientRect(),
                 x = (e.clientX - clientBounds.left) / clientBounds.width,
                 y = (e.clientY - clientBounds.top) / clientBounds.height;
@@ -486,20 +486,20 @@ var actMoveDo = actMoveDo || (function ($) {
             var axis = parseInt(event.axis, 10),
                 direction = [];
             // down
-            if ((event.deltaY > 0) || ((axis === 2) && (event.detail > 0))) {
+            if ((event.deltaY > 0) || (event.wheelDeltaY < 0) || ((axis === 2) && (event.detail > 0))) {
                 direction.push("down");
             }
             // up
-            else if ((event.deltaY < 0) || ((axis === 2) && (event.detail < 0))) {
+            else if ((event.deltaY < 0) || (event.wheelDeltaY > 0) || ((axis === 2) && (event.detail < 0))) {
                 direction.push("up");
             }
 
             // right
-            if ((event.deltaX > 0) || ((axis === 1) && (event.detail > 0))) {
+            if ((event.deltaX > 0)  || (event.wheelDeltaX > 0)|| ((axis === 1) && (event.detail > 0))) {
                 direction.push("right");
             }
             // left
-            else if ((event.deltaX < 0) || ((axis === 1) && (event.detail < 0))) {
+            else if ((event.deltaX < 0) || (event.wheelDeltaX < 0) || ((axis === 1) && (event.detail < 0))) {
                 direction.push("left");
             }
 
