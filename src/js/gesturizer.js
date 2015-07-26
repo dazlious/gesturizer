@@ -29,25 +29,24 @@ var gesturizer = gesturizer || (function ($) {
                 zoom: null,
                 wheel: null,
                 pinch: null
+            },
+            eventNames: {
+                start: {
+                    touch: "touchstart",
+                    mouse: "mousedown"
+                },
+                move: {
+                    touch: "touchmove",
+                    mouse: "mousemove"
+                },
+                end: {
+                    touch: "touchend",
+                    mouse: "mouseup"
+                },
+                scroll: this.getScrollEventName()
             }
         };
-        
-        this.settings.eventNames = {
-            start: {
-                touch: "touchstart",
-                mouse: "mousedown"
-            },
-            move: {
-                touch: "touchmove",
-                mouse: "mousemove"
-            },
-            end: {
-                touch: "touchend",
-                mouse: "mouseup"
-            },
-            scroll: this.getScrollEventName()
-        };
-        
+
         $.extend(true, this.settings, settings || {});
 
         this.current = {
