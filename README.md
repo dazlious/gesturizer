@@ -62,6 +62,7 @@ This is the easiest way:
         });
     </script>
 
+
 ## basic usage
 
 There are two different methods listening to an event. First use case is a direct callback function bound to the specific event. The second use case is to assign a string to the event and bind it with the jQuery on()-handler.
@@ -81,6 +82,60 @@ There are two different methods listening to an event. First use case is a direc
             console.log(e.gesturizer);
         });
     </script>
+
+
+## passing options
+
+You can pass a list of options by parameterizing the constructor call.
+
+    <script>
+        var settings = {
+            container: ".foo"
+        };
+        new gesturizer(settings);
+    </script>
+
+
+
+## settings
+
+### container: string
+> default: ".container"
+
+This is the container, you want your gestures recognized to. Must be a valid jQuery-string-based-selector. settings.container is passed to this.$container and this.container by bind $(settings.container).
+
+*e.g.: "#your-id", ".foo-gestures", ".bar:not(foo)", etc*
+
+
+### isTouchDevice: boolean
+> default: this.checkTouch()
+
+Checks if your clients device has touch available or not. If Gesturizers checkTouch-function does not fit your needs, you can bind your own logic to this variable
+
+
+### isMouseDevice: boolean
+> default: this.checkMouse()
+
+Checks if your clients device has mouse available or not. If Gesturizers checkMouse-function does not fit your needs, you can bind your own logic to this variable
+
+
+### timeTreshold: object
+> default: {tap: 200, hold: 500, swipe: 300, flick: 50}
+
+You can overwrite the defaults tresholds. If you want your swipe to be called a bit slower, because you think it is too fast, just pass
+
+    timeTreshold: {
+        tap: 1000
+    }
+
+to the settings. Now the user has one second (1000ms) for making their second touch, in order to fire doupletap-event
+
+
+
+
+
+
+
 
 
 ## build your own
