@@ -47,8 +47,8 @@ var gesturizer = gesturizer || (function ($) {
             },
             scroll: this.getScrollEventName()
         };
-
-        $.extend(this.settings, settings || {});
+        
+        $.extend(true, this.settings, settings || {});
 
         this.current = {
             downEvent: false,

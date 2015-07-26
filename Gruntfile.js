@@ -20,6 +20,11 @@ module.exports = function(grunt) {
                 }]
             },
             example: {
+                options: {
+                    compress: {
+                        drop_console: false
+                    }
+                },
                 files: [{
                     expand: true,
                     cwd: 'src/js',
