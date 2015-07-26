@@ -9,7 +9,6 @@ var gesturizer = gesturizer || (function ($) {
             isMouseDevice: this.checkMouse(),
             timeTreshold: {
                 tap: 200,
-                doubletap: 200,
                 hold: 500,
                 swipe: 300,
                 flick: 50
@@ -341,7 +340,7 @@ var gesturizer = gesturizer || (function ($) {
                     break;
                 case "doubletap":
                     if (timeDiff < this.settings.timeTreshold.hold) {
-                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.doubletap, {
+                        this.setTimeoutForEvent(this.settings.callbacks.doubletap, this.settings.timeTreshold.tap, {
                             target: this.current.target,
                             positions: {
                                 start: this.current.start,
