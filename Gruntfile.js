@@ -18,6 +18,15 @@ module.exports = function(grunt) {
                     dest: 'build',
                     ext: '.min.js'
                 }]
+            },
+            example: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/js',
+                    src: '**/*.js',
+                    dest: 'examples',
+                    ext: '.min.js'
+                }]
             }
         },
         cssmin: {

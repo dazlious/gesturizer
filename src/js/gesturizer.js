@@ -31,7 +31,7 @@ var gesturizer = gesturizer || (function ($) {
                 pinch: null
             }
         };
-
+        
         this.settings.eventNames = {
             start: {
                 touch: "touchstart",
