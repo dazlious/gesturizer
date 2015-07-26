@@ -70,7 +70,8 @@
     <script>
 
         $( document ).ready(function() {
-            var $log = $(".log"),
+            var $actmovedo = $(".actmovedo"),
+                $log = $(".log"),
                 $logHeading = $(".log-heading"),
                 $log2 = $(".log-2"),
                 $logHeading2 = $(".log-heading-2"),
@@ -128,10 +129,7 @@
                         $log2.text("");
                         $log3.text("");
                     },
-                    swipe: function(response) {
-                        $logHeading2.text("swipe");
-                        $log2.text(JSON.stringify(response, replacer, "\t"));
-                    },
+                    swipe: "swipe",
                     flick: function(response) {
                         $logHeading3.text("flick");
                         $log3.text(JSON.stringify(response, replacer, "\t"));
@@ -142,12 +140,7 @@
                         $logHeading3.text("");
                         $log3.text("");
                     },
-                    zoom: function(response) {
-                        $logHeading.text("zoom");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
-                        $logHeading3.text("");
-                        $log3.text("");
-                    },
+                    zoom: "zoom",
                     pinch: function(response) {
                         $logHeading2.text("pinch");
                         $log2.text(JSON.stringify(response, replacer, "\t"));
@@ -156,6 +149,19 @@
                     }
                 }
             });
+
+            $actmovedo.on("swipe", function(e) {
+                $logHeading2.text("swipe");
+                $log2.text(JSON.stringify(e.actmovedo, replacer, "\t"));
+            });
+
+            $actmovedo.on("zoom", function(e) {
+                $logHeading.text("zoom");
+                $log.text(JSON.stringify(e.actmovedo, replacer, "\t"));
+                $logHeading3.text("");
+                $log3.text("");
+            });
+
         });
     </script>
 
