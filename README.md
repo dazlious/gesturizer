@@ -1,6 +1,6 @@
 # Gesturizer
 
-## about
+## compatibility
 
 This library is compatible with
 
@@ -12,7 +12,10 @@ This library is compatible with
 - iOS
 - Windows Phone (up to come)
 
+## examples
+Watch my [list of examples](http://dazlious.github.io/gesturizer/)
 
+##questions
 **What it Gesturizer supposed to do for me?**
 
 Gesturizer is a small library for your js application, that triggers common gesture events. It is very flexible, easy to understand and very tiny.
@@ -35,3 +38,9 @@ Gesturizer is a small library for your js application, that triggers common gest
 **What should I do, if I found an error or compatibility issue in Gesturizer?**
 
 Please send me an [detailed issue](https://github.com/dazlious/gesturizer/issues), concerning your needs. I want to improve this library.
+
+## build your own
+All you have to do, is install all devDependencies and run the watch task in grunt
+
+    sudo npm install --save-dev
+    grunt watch
