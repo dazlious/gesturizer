@@ -131,11 +131,44 @@ You can overwrite the defaults tresholds. If you want your swipe to be called a 
 to the settings. Now the user has one second (1000ms) for making their second touch, in order to fire doupletap-event
 
 
+### autoFireHold: number
+> default: null
+
+You can wether enable this, by assigning a number as milliseconds or disable it by assigning null|false|undefined. By default this feature is disabled.
+
+When turned on, you can hold mouse or finger down and the event fires after your set timeout. This timeout is for both events: hold and tapHold
 
 
+### distanceTreshold: object
+> default: {swipe: 500}
+
+You can overwrite the defaults distance treshold for swiping. This is the distance, that you have to travel, before a swipe would be detected.
+
+    distanceTreshold: {
+        swipe: 500
+    }
+
+Its unit is pixel.
 
 
+### eventNames: object
+> default: {start: {
+                    touch: "touchstart",
+                    mouse: "mousedown"
+                },
+                move: {
+                    touch: "touchmove",
+                    mouse: "mousemove"
+                },
+                end: {
+                    touch: "touchend",
+                    mouse: "mouseup"
+                },
+                scroll: this.getScrollEventName()}
 
+*You should not change this*
+
+These are the original eventnames used to track the movement
 
 
 ## build your own
