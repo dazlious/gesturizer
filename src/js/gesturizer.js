@@ -1,10 +1,10 @@
-var actMoveDo = actMoveDo || (function ($) {
+var gesturizer = gesturizer || (function ($) {
         "use strict";
 
-        function ActMoveDo(settings) {
+        function Gesturizer(settings) {
 
             this.settings = {
-                container: ".actmovedo",
+                container: ".gesturizer",
                 isTouchDevice: this.checkTouch(),
                 isMouseDevice: this.checkMouse(),
                 timeTreshold: {
@@ -70,12 +70,12 @@ var actMoveDo = actMoveDo || (function ($) {
 
         }
 
-        ActMoveDo.prototype.init = function () {
+        Gesturizer.prototype.init = function () {
             this.$container = $(this.settings.container);
             this.container = $(this.settings.container)[0];
         };
 
-        ActMoveDo.prototype.bindEvents = function () {
+        Gesturizer.prototype.bindEvents = function () {
 
             // if device is touch
             if (this.settings.isTouchDevice) {
@@ -89,20 +89,20 @@ var actMoveDo = actMoveDo || (function ($) {
 
         };
 
-        ActMoveDo.prototype.bindTouchEvents = function () {
+        Gesturizer.prototype.bindTouchEvents = function () {
             this.$container.on(this.settings.eventNames.start.touch, this.startHandler.bind(this));
             this.$container.on(this.settings.eventNames.move.touch, this.moveHandler.bind(this));
             this.$container.on(this.settings.eventNames.end.touch, this.endHandler.bind(this));
         };
 
-        ActMoveDo.prototype.bindMouseEvents = function () {
+        Gesturizer.prototype.bindMouseEvents = function () {
             this.$container.on(this.settings.eventNames.scroll, this.scrollHandler.bind(this));
             this.$container.on(this.settings.eventNames.start.mouse, this.startHandler.bind(this));
             this.$container.on(this.settings.eventNames.move.mouse, this.moveHandler.bind(this));
             this.$container.on(this.settings.eventNames.end.mouse, this.endHandler.bind(this));
         };
 
-        ActMoveDo.prototype.scrollHandler = function (event) {
+        Gesturizer.prototype.scrollHandler = function (event) {
             event = event || window.event;
 
             event.stopPropagation();
@@ -130,7 +130,7 @@ var actMoveDo = actMoveDo || (function ($) {
             }
         };
 
-        ActMoveDo.prototype.startHandler = function (event) {
+        Gesturizer.prototype.startHandler = function (event) {
 
             event.stopPropagation();
             event.preventDefault();
@@ -190,7 +190,7 @@ var actMoveDo = actMoveDo || (function ($) {
             }
         };
 
-        ActMoveDo.prototype.moveHandler = function (event) {
+        Gesturizer.prototype.moveHandler = function (event) {
             // if touchstart event was not fired
             if (!this.current.downEvent) {
                 return false;
@@ -293,7 +293,7 @@ var actMoveDo = actMoveDo || (function ($) {
 
         };
 
-        ActMoveDo.prototype.endHandler = function (event) {
+        Gesturizer.prototype.endHandler = function (event) {
 
             event.stopPropagation();
             event.preventDefault();
@@ -423,11 +423,11 @@ var actMoveDo = actMoveDo || (function ($) {
             this.current.multitouch = false;
         };
 
-        ActMoveDo.prototype.calculateSpeed = function (distance, time) {
+        Gesturizer.prototype.calculateSpeed = function (distance, time) {
             return (distance / time) * 100;
         };
 
-        ActMoveDo.prototype.getSwipeDirections = function (direction) {
+        Gesturizer.prototype.getSwipeDirections = function (direction) {
             var directions = [];
             if (direction[0] < 0) {
                 directions.push("left");
@@ -444,11 +444,11 @@ var actMoveDo = actMoveDo || (function ($) {
             return directions;
         };
 
-        ActMoveDo.prototype.vectorLength = function (v) {
+        Gesturizer.prototype.vectorLength = function (v) {
             return Math.sqrt((v[0] * v[0]) + (v[1] * v[1]));
         };
 
-        ActMoveDo.prototype.setTimeoutForEvent = function (callback, timeout, args, holdTimeout) {
+        Gesturizer.prototype.setTimeoutForEvent = function (callback, timeout, args, holdTimeout) {
             if (holdTimeout) {
                 this.current.holdTimeout = setTimeout(this.eventCallback.bind(this, callback, args), timeout);
             } else {
@@ -456,12 +456,12 @@ var actMoveDo = actMoveDo || (function ($) {
             }
         };
 
-        ActMoveDo.prototype.eventCallback = function (callback, args) {
+        Gesturizer.prototype.eventCallback = function (callback, args) {
             if (callback) {
                 if (typeof callback === "string") {
                     this.$container.trigger({
                         type: callback,
-                        actmovedo: args
+                        gesturizer: args
                     });
                 } else if (typeof callback === "function") {
                     callback(args);
@@ -470,7 +470,7 @@ var actMoveDo = actMoveDo || (function ($) {
             this.current.lastAction = null;
         };
 
-        ActMoveDo.prototype.getRelativePosition = function (e) {
+        Gesturizer.prototype.getRelativePosition = function (e) {
             var target = this.container,
                 clientBounds = target.getBoundingClientRect(),
                 x = (e.clientX - clientBounds.left) / clientBounds.width,
@@ -478,20 +478,20 @@ var actMoveDo = actMoveDo || (function ($) {
             return [x, y];
         };
 
-        ActMoveDo.prototype.getAbsolutePosition = function (target, point) {
+        Gesturizer.prototype.getAbsolutePosition = function (target, point) {
             var clientBounds = target.getBoundingClientRect(),
                 x = point[0] * clientBounds.width,
                 y = point[1] * clientBounds.height;
             return [x, y];
         };
 
-        ActMoveDo.prototype.getDistance = function (point1, point2) {
+        Gesturizer.prototype.getDistance = function (point1, point2) {
             var a = point1[0] - point2[0],
                 b = point1[1] - point2[1];
             return Math.sqrt(a * a + b * b);
         };
 
-        ActMoveDo.prototype.getScrollDirection = function (event) {
+        Gesturizer.prototype.getScrollDirection = function (event) {
             var axis = parseInt(event.axis, 10),
                 direction = [];
             // down
@@ -515,21 +515,21 @@ var actMoveDo = actMoveDo || (function ($) {
             return direction;
         };
 
-        ActMoveDo.prototype.checkTouch = function () {
+        Gesturizer.prototype.checkTouch = function () {
             return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
         };
 
-        ActMoveDo.prototype.checkMouse = function () {
+        Gesturizer.prototype.checkMouse = function () {
             return ('onmousedown' in window);
         };
 
-        ActMoveDo.prototype.getScrollEventName = function () {
+        Gesturizer.prototype.getScrollEventName = function () {
             return "onwheel" in document.createElement("div") ? "wheel" :
                 document.onmousewheel !== undefined ? "mousewheel" :
                     "DOMMouseScroll";
         };
 
-        ActMoveDo.prototype.getEvent = function (e) {
+        Gesturizer.prototype.getEvent = function (e) {
             jQuery.event.fix(e);
             // fixing end event has no more touches
             if (e.originalEvent.touches && e.originalEvent.touches.length === 0) {
@@ -538,6 +538,6 @@ var actMoveDo = actMoveDo || (function ($) {
             return e.originalEvent.touches || e.originalEvent.changedTouches || e.originalEvent;
         };
 
-        return ActMoveDo;
+        return Gesturizer;
 
     }(jQuery));

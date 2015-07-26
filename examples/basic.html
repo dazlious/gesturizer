@@ -2,12 +2,11 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>ActMoveDo: Basic-Example</title>
+    <title>Gesturizer: Basic-Example</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="../build/actmovedo.min.css">
     <script src="../vendor/jquery-2.1.4.min.js"></script>
 
     <style>
@@ -16,12 +15,12 @@
             width: 100%;
             height: 100%
         }
-        .actmovedo {
+        .gesturizer {
             position: absolute;
             width: 100%;
             height: 100%;
         }
-        #actmovedo-0 {
+        #gesturizer-0 {
             top: 0;
             left: 0;
             background: royalblue;
@@ -46,7 +45,7 @@
 
     <div class="test-container">
 
-        <div id="actmovedo-0" class="actmovedo">
+        <div id="gesturizer-0" class="gesturizer">
             <!-- optional start -->
             <div class="log-container">
                 <h2 class="log-heading"></h2>
@@ -65,12 +64,12 @@
 
     </div>
 
-    <script src="../src/js/actmovedo.js"></script>
+    <script src="../src/js/gesturizer.js"></script>
 
     <script>
 
         $( document ).ready(function() {
-            var $actmovedo = $(".actmovedo"),
+            var $gesturizer = $(".gesturizer"),
                 $log = $(".log"),
                 $logHeading = $(".log-heading"),
                 $log2 = $(".log-2"),
@@ -85,8 +84,8 @@
                 return value;
             }
 
-            var actMoveDo_instance_1 = new actMoveDo({
-                container: ".actmovedo",
+            var gesturizer_instance_1 = new gesturizer({
+                container: ".gesturizer",
                 autoFireHold: 500,
                 callbacks: {
                     tap: function(response) {
@@ -150,14 +149,14 @@
                 }
             });
 
-            $actmovedo.on("swipe", function(e) {
+            $gesturizer.on("swipe", function(e) {
                 $logHeading2.text("swipe");
-                $log2.text(JSON.stringify(e.actmovedo, replacer, "\t"));
+                $log2.text(JSON.stringify(e.gesturizer, replacer, "\t"));
             });
 
-            $actmovedo.on("zoom", function(e) {
+            $gesturizer.on("zoom", function(e) {
                 $logHeading.text("zoom");
-                $log.text(JSON.stringify(e.actmovedo, replacer, "\t"));
+                $log.text(JSON.stringify(e.gesturizer, replacer, "\t"));
                 $logHeading3.text("");
                 $log3.text("");
             });

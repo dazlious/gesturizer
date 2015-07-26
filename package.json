@@ -1,10 +1,10 @@
 {
-    "name": "ActMoveDo",
-    "version": "0.9.0",
+    "name": "gesturizer",
+    "version": "0.9.1",
     "author": "Michael Duve",
     "email": "mduve@designmail.net",
     "homepage": "https://github.com/dazlious",
-    "url": "https://github.com/dazlious/ActMoveDo",
+    "url": "https://github.com/dazlious/gesturizer",
     "description": "An extensive framework for gestures and user interactions",
     "license": {
         "type": "MIT",
@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/dazlious/ActMoveDo"
+        "url": "https://github.com/dazlious/gesturizer"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
@@ -25,7 +25,7 @@
     },
     "dependencies": {},
     "bugs": {
-        "url": "https://github.com/dazlious/ActMoveDo/issues"
+        "url": "https://github.com/dazlious/gesturizer/issues"
     },
     "keywords": [
         "gestures",
