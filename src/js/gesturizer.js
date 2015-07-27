@@ -249,6 +249,8 @@ var gesturizer = gesturizer || (function ($) {
 
                 if (this.settings.isIEDevice && this.getRelativePosition(e)[0] === this.current.start[0] && this.getRelativePosition(e)[1] === this.current.start[1]) {
                     return false;
+                } else if (this.settings.isTouchDevice && this.getRelativePosition(e[0])[0] === this.current.start[0] && this.getRelativePosition(e[0])[1] === this.current.start[1]) {
+                    return false;
                 }
 
                 if (this.current.timeout) {
