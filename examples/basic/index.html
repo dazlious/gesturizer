@@ -87,6 +87,9 @@
             var gesturizer_instance_1 = new gesturizer({
                 container: ".gesturizer",
                 autoFireHold: 500,
+                timeTreshold: {
+                    doubletap: 1000
+                },
                 callbacks: {
                     tap: function(response) {
                         $logHeading.text("tap");
@@ -148,6 +151,7 @@
                     }
                 }
             });
+            console.log(gesturizer_instance_1);
 
             $gesturizer.on("swipe", function(e) {
                 $logHeading2.text("swipe");
