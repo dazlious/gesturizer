@@ -119,6 +119,12 @@ Checks if your clients device has touch available or not. If Gesturizers checkTo
 Checks if your clients device has mouse available or not. If Gesturizers checkMouse-function does not fit your needs, you can bind your own logic to this variable
 
 
+### isIEDevice: boolean
+> default: this.checkIETouch()
+
+Checks if your clients device is using IE. If Gesturizers checkIETouch-function does not fit your needs, you can bind your own logic to this variable
+If true, Gesturizer uses pointer-events instead of touch and mouse
+
 ### timeTreshold: object
 > default: {tap: 200, hold: 500, swipe: 300, flick: 50}
 
