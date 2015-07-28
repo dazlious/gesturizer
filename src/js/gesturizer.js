@@ -29,8 +29,7 @@ var gesturizer = gesturizer || (function ($) {
                         zoom: false,
                         wheel: false,
                         pinch: false
-                    },
-
+                    }
                 };
 
                 this.settings.eventNames = {

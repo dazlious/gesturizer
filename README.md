@@ -16,9 +16,9 @@ This library is compatible with
 Watch my [list of examples](http://dazlious.github.io/gesturizer/)
 
 ##questions
-**What it Gesturizer supposed to do for me?**
+**Which benefit do I obtain by using Gesturizer?**
 
-Gesturizer is a small library for your js application, that triggers common gesture events. It is very flexible, easy to understand and very tiny.
+Gesturizer is a small library for your js application, that triggers common gesture events. It is flexible, straight forward and easy to understand. Gesturizer **always uses relative positioning** and will never give you absolute pixel units.
 
 
 **What are these support gestures?**
@@ -35,13 +35,14 @@ Gesturizer is a small library for your js application, that triggers common gest
 - pinch
 
 
-**What should I do, if I found an error or compatibility issue in Gesturizer?**
+**What should I do, if an error or compatibility issue occures while working with Gesturizer?**
 
-Please send me [detailed information by opening an issue](https://github.com/dazlious/gesturizer/issues), concerning your needs. I want to improve this library.
+Please send me [detailed information by opening an issue](https://github.com/dazlious/gesturizer/issues), concerning your needs.
+
 
 ## initialization
 
-**You need jQuery loaded for the plugin to work**
+**You need jQuery in order to use the plugin**
 
 There a several methods to use this library. You will notice, that nothing happens, if you only initialize gesturizer, but have added no callbacks at all. See usage!
 
@@ -107,6 +108,51 @@ This is the container, you want your gestures recognized to. Must be a valid jQu
 *e.g.: "#your-id", ".foo-gestures", ".bar:not(foo)", etc*
 
 
+### callbacks: object {property: function|string}
+
+> default: tap: false,
+   tapHold: false,
+   doubletap: false,
+   hold: false,
+   pan: false,
+   swipe: false,
+   flick: false,
+   zoom: false,
+   wheel: false,
+   pinch: false
+   }
+
+You can bind a callback function to the event or assign a string to it.
+
+
+#### callback function:
+
+In this case, you can act directly in the plugin initialization
+
+    new gesturizer({
+        callbacks:
+            tap: function(response) {
+                console.info(response);
+            }
+        }
+    });
+
+
+#### string assignment
+
+In this case, your data is stored in a property called gesturizer of the response event object.
+
+    new gesturizer({
+        callbacks: {
+            swipe: "swipe"
+        }
+    });
+
+    $(".gesturizer").on("swipe", function(e) {
+        console.log(e.gesturizer);
+    });
+
+
 ### isTouchDevice: boolean
 > default: this.checkTouch()
 
@@ -138,7 +184,7 @@ to the settings. Now the user has one second (1000ms) for making their second to
 
 
 ### autoFireHold: number
-> default: null
+> default: false
 
 You can wether enable this, by assigning a number as milliseconds or disable it by assigning null|false|undefined. By default this feature is disabled.
 
