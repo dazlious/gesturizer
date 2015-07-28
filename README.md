@@ -10,7 +10,7 @@ This library is compatible with
 - IE >= 9
 - Android
 - iOS
-- Windows Phone (up to come)
+- Windows Phone
 
 ## examples
 Watch my [list of examples](http://dazlious.github.io/gesturizer/)
