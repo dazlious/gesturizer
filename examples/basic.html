@@ -137,8 +137,10 @@
                         $log3.text(JSON.stringify(response, replacer, "\t"));
                     },
                     wheel: function(response) {
-                        $logHeading2.text("wheel");
-                        $log2.text(JSON.stringify(response, replacer, "\t"));
+                        $logHeading.text("wheel");
+                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $logHeading2.text("");
+                        $log2.text("");
                         $logHeading3.text("");
                         $log3.text("");
                     },
@@ -151,7 +153,6 @@
                     }
                 }
             });
-            console.log(gesturizer_instance_1);
 
             $gesturizer.on("swipe", function(e) {
                 $logHeading2.text("swipe");
@@ -159,8 +160,8 @@
             });
 
             $gesturizer.on("zoom", function(e) {
-                $logHeading.text("zoom");
-                $log.text(JSON.stringify(e.gesturizer, replacer, "\t"));
+                $logHeading2.text("zoom");
+                $log2.text(JSON.stringify(e.gesturizer, replacer, "\t"));
                 $logHeading3.text("");
                 $log3.text("");
             });

@@ -137,7 +137,7 @@ var gesturizer = gesturizer || (function ($) {
                     });
                 }
 
-                if (this.settings.callbacks.zoom) {
+                if (this.settings.callbacks.zoom && (directions.indexOf("up") > -1 || directions.indexOf("down") > -1)) {
                     this.eventCallback(this.settings.callbacks.zoom, {
                         target: event.target,
                         direction: (directions.indexOf("up") > -1) ? "in" : (directions.indexOf("down") > -1) ? "out" : "none",
@@ -584,21 +584,29 @@ var gesturizer = gesturizer || (function ($) {
             Gesturizer.prototype.getScrollDirection = function (event) {
                 var axis = parseInt(event.axis, 10),
                     direction = [];
+
+                console.log("******************");
+                console.log(event.wheelDelta);
+                console.log(event.wheelDeltaX, event.wheelDeltaY);
+                console.log(event.deltaX, event.deltaY);
+                console.log(event.detail);
+                console.log("******************");
+
                 // down
-                if (event.wheelDelta < 0 || (event.deltaY > 0) || (event.wheelDeltaY < 0) || ((axis === 2) && (event.detail > 0))) {
+                if (event.deltaY > 0 || ((axis === 2) && (event.detail > 0))) {
                     direction.push("down");
                 }
                 // up
-                else if (event.wheelDelta > 0 || (event.deltaY < 0) || (event.wheelDeltaY > 0) || ((axis === 2) && (event.detail < 0))) {
+                else if (event.deltaY < 0 || (axis === 2 && event.detail < 0)) {
                     direction.push("up");
                 }
 
                 // right
-                if ((event.deltaX > 0) || (event.wheelDeltaX > 0) || ((axis === 1) && (event.detail > 0))) {
+                if (event.deltaX > 0 || (axis === 1 && event.detail > 0)) {
                     direction.push("right");
                 }
                 // left
-                else if ((event.deltaX < 0) || (event.wheelDeltaX < 0) || ((axis === 1) && (event.detail < 0))) {
+                else if (event.deltaX < 0 || (axis === 1 && event.detail < 0)) {
                     direction.push("left");
                 }
 
