@@ -585,28 +585,21 @@ var gesturizer = gesturizer || (function ($) {
                 var axis = parseInt(event.axis, 10),
                     direction = [];
 
-                console.log("******************");
-                console.log(event.wheelDelta);
-                console.log(event.wheelDeltaX, event.wheelDeltaY);
-                console.log(event.deltaX, event.deltaY);
-                console.log(event.detail);
-                console.log("******************");
-
                 // down
-                if (event.deltaY > 0 || ((axis === 2) && (event.detail > 0))) {
+                if (event.deltaY > 0 || (!event.deltaY && event.wheelDeltaY < 0) || ((axis === 2) && (event.detail > 0)) || (Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail))) < 0)) {
                     direction.push("down");
                 }
                 // up
-                else if (event.deltaY < 0 || (axis === 2 && event.detail < 0)) {
+                else if (event.deltaY < 0 || (!event.deltaY && event.wheelDeltaY > 0) || (axis === 2 && event.detail < 0) || (Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail))) > 0)) {
                     direction.push("up");
                 }
 
                 // right
-                if (event.deltaX > 0 || (axis === 1 && event.detail > 0)) {
+                if (event.deltaX > 0 || (!event.deltaX && event.wheelDeltaX > 0) || (axis === 1 && event.detail > 0)) {
                     direction.push("right");
                 }
                 // left
-                else if (event.deltaX < 0 || (axis === 1 && event.detail < 0)) {
+                else if (event.deltaX < 0 || (!event.deltaX && event.wheelDeltaX < 0) || (axis === 1 && event.detail < 0)) {
                     direction.push("left");
                 }
 
