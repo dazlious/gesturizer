@@ -149,6 +149,10 @@ var gesturizer = gesturizer || (function ($) {
 
             Gesturizer.prototype.startHandler = function (event) {
 
+                if (event.button && event.button != 0) {
+                    return false;
+                }
+                
                 event.stopPropagation();
                 event.preventDefault();
 
