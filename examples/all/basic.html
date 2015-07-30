@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Gesturizer: Basic-Example</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="jquery-2.1.4.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%
+        }
+        .gesturizer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #gesturizer-0 {
+            top: 0;
+            left: 0;
+            background: royalblue;
+            color: #f6f6f6;
+            font-family: Arial, sans-serif;
+        }
+        .log {
+            white-space: pre;
+        }
+        .log-container {
+            float: left;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="test-container">
+
+        <div id="gesturizer-0" class="gesturizer">
+            <!-- optional start -->
+            <div class="log-container">
+                <h2 class="log-heading"></h2>
+                <p class="log"></p>
+            </div>
+            <!-- optional end -->
+        </div>
+
+    </div>
+
+    <script src="gesturizer.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            var $gesturizer = $(".gesturizer"),
+                $log = $(".log"),
+                $logHeading = $(".log-heading");
+
+            var gesturizer_instance_1 = new gesturizer({
+                container: ".gesturizer",
+                callbacks: {
+                    doubletap: "doubletap",
+                    pan: "pan",
+                    flick: "flick"
+                }
+            });
+
+            $gesturizer.on("doubletap", function(e) {
+                showDebug("doubletap", e);
+            });
+
+            $gesturizer.on("pan", function(e) {
+                showDebug("pan", e);
+            });
+
+            $gesturizer.on("flick", function(e) {
+                $logHeading.text("flick");
+                showDebug("flick", e);
+            });
+
+
+            function showDebug(type, e) {
+                $logHeading.text(type);
+                $log.text(JSON.stringify(e.gesturizer, replacer, "\t"));
+            }
+
+            function replacer(key, value) {
+                if (key === "target") {
+                    return value.getAttribute("id") || value.getAttribute("class") || "unnamed";
+                }
+                return value;
+            }
+
+        });
+    </script>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Gesturizer: Basic-Example</title>
+    <title>Gesturizer: Full-Example</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,6 +26,7 @@
             background: royalblue;
             color: #f6f6f6;
             font-family: Arial, sans-serif;
+            font-size: 75%;
         }
         .log,
         .log-2,
@@ -68,7 +69,7 @@
 
     <script>
 
-        $( document ).ready(function() {
+        $(document).ready(function() {
             var $gesturizer = $(".gesturizer"),
                 $log = $(".log"),
                 $logHeading = $(".log-heading"),
@@ -93,7 +94,7 @@
                 callbacks: {
                     tap: function(response) {
                         $logHeading.text("tap");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $log.text(JSON.stringify(response, replacer, 2));
                         $logHeading2.text("");
                         $logHeading3.text("");
                         $log2.text("");
@@ -101,7 +102,7 @@
                     },
                     doubletap: function(response) {
                         $logHeading.text("doubletap");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $log.text(JSON.stringify(response, replacer, 2));
                         $logHeading2.text("");
                         $logHeading3.text("");
                         $log2.text("");
@@ -109,7 +110,7 @@
                     },
                     hold: function(response) {
                         $logHeading.text("hold");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $log.text(JSON.stringify(response, replacer, 2));
                         $logHeading2.text("");
                         $logHeading3.text("");
                         $log2.text("");
@@ -117,7 +118,7 @@
                     },
                     tapHold: function(response) {
                         $logHeading.text("tap and hold");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $log.text(JSON.stringify(response, replacer, 2));
                         $logHeading2.text("");
                         $logHeading3.text("");
                         $log2.text("");
@@ -125,7 +126,7 @@
                     },
                     pan: function(response) {
                         $logHeading.text("pan");
-                        $log.text(JSON.stringify(response, replacer, "\t"));
+                        $log.text(JSON.stringify(response, replacer, 2));
                         $logHeading2.text("");
                         $logHeading3.text("");
                         $log2.text("");
@@ -134,33 +135,34 @@
                     swipe: "swipe",
                     flick: function(response) {
                         $logHeading3.text("flick");
-                        $log3.text(JSON.stringify(response, replacer, "\t"));
+                        $log3.text(JSON.stringify(response, replacer, 2));
                     },
                     wheel: function(response) {
-                        $logHeading2.text("wheel");
-                        $log2.text(JSON.stringify(response, replacer, "\t"));
+                        $logHeading.text("wheel");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $log2.text("");
                         $logHeading3.text("");
                         $log3.text("");
                     },
                     zoom: "zoom",
                     pinch: function(response) {
                         $logHeading2.text("pinch");
-                        $log2.text(JSON.stringify(response, replacer, "\t"));
+                        $log2.text(JSON.stringify(response, replacer, 2));
                         $logHeading3.text("");
                         $log3.text("");
                     }
                 }
             });
-            console.log(gesturizer_instance_1);
 
             $gesturizer.on("swipe", function(e) {
                 $logHeading2.text("swipe");
-                $log2.text(JSON.stringify(e.gesturizer, replacer, "\t"));
+                $log2.text(JSON.stringify(e.gesturizer, replacer, 2));
             });
 
             $gesturizer.on("zoom", function(e) {
-                $logHeading.text("zoom");
-                $log.text(JSON.stringify(e.gesturizer, replacer, "\t"));
+                $logHeading2.text("zoom");
+                $log2.text(JSON.stringify(e.gesturizer, replacer, 2));
                 $logHeading3.text("");
                 $log3.text("");
             });
