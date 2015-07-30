@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Gesturizer: Full-Example</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="jquery-2.1.4.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%
+        }
+        .gesturizer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #gesturizer-0 {
+            top: 0;
+            left: 0;
+            background: royalblue;
+            color: #f6f6f6;
+            font-family: Arial, sans-serif;
+            font-size: 75%;
+        }
+        .log,
+        .log-2,
+        .log-3 {
+            white-space: pre;
+        }
+        .log-container {
+            float: left;
+            margin: 10px;
+            padding: 10px;
+            border: 3px solid #f6f6f6;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="test-container">
+
+        <div id="gesturizer-0" class="gesturizer">
+            <!-- optional start -->
+            <div class="log-container">
+                <h2 class="log-heading"></h2>
+                <p class="log"></p>
+            </div>
+            <div class="log-container">
+                <h2 class="log-heading-2"></h2>
+                <p class="log-2"></p>
+            </div>
+            <div class="log-container">
+                <h2 class="log-heading-3"></h2>
+                <p class="log-3"></p>
+            </div>
+            <!-- optional end -->
+        </div>
+
+    </div>
+
+    <script src="gesturizer.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            var $gesturizer = $(".gesturizer"),
+                $log = $(".log"),
+                $logHeading = $(".log-heading"),
+                $log2 = $(".log-2"),
+                $logHeading2 = $(".log-heading-2"),
+                $log3 = $(".log-3"),
+                $logHeading3 = $(".log-heading-3");
+
+            function replacer(key, value) {
+                if (key === "target") {
+                    return value.getAttribute("id") || value.getAttribute("class") || "unnamed";
+                }
+                return value;
+            }
+
+            var gesturizer_instance_1 = new gesturizer({
+                container: ".gesturizer",
+                autoFireHold: 500,
+                timeTreshold: {
+                    doubletap: 1000
+                },
+                callbacks: {
+                    tap: function(response) {
+                        $logHeading.text("tap");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $logHeading3.text("");
+                        $log2.text("");
+                        $log3.text("");
+                    },
+                    doubletap: function(response) {
+                        $logHeading.text("doubletap");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $logHeading3.text("");
+                        $log2.text("");
+                        $log3.text("");
+                    },
+                    hold: function(response) {
+                        $logHeading.text("hold");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $logHeading3.text("");
+                        $log2.text("");
+                        $log3.text("");
+                    },
+                    tapHold: function(response) {
+                        $logHeading.text("tap and hold");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $logHeading3.text("");
+                        $log2.text("");
+                        $log3.text("");
+                    },
+                    pan: function(response) {
+                        $logHeading.text("pan");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $logHeading3.text("");
+                        $log2.text("");
+                        $log3.text("");
+                    },
+                    swipe: "swipe",
+                    flick: function(response) {
+                        $logHeading3.text("flick");
+                        $log3.text(JSON.stringify(response, replacer, 2));
+                    },
+                    wheel: function(response) {
+                        $logHeading.text("wheel");
+                        $log.text(JSON.stringify(response, replacer, 2));
+                        $logHeading2.text("");
+                        $log2.text("");
+                        $logHeading3.text("");
+                        $log3.text("");
+                    },
+                    zoom: "zoom",
+                    pinch: function(response) {
+                        $logHeading2.text("pinch");
+                        $log2.text(JSON.stringify(response, replacer, 2));
+                        $logHeading3.text("");
+                        $log3.text("");
+                    }
+                }
+            });
+
+            $gesturizer.on("swipe", function(e) {
+                $logHeading2.text("swipe");
+                $log2.text(JSON.stringify(e.gesturizer, replacer, 2));
+            });
+
+            $gesturizer.on("zoom", function(e) {
+                $logHeading2.text("zoom");
+                $log2.text(JSON.stringify(e.gesturizer, replacer, 2));
+                $logHeading3.text("");
+                $log3.text("");
+            });
+
+        });
+    </script>
+
+</body>
+</html>

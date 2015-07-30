@@ -15,7 +15,7 @@ var gesturizer = gesturizer || (function ($) {
                         flick: 50
                     },
                     distanceTreshold: {
-                        swipe: 180
+                        swipe: 250
                     },
                     autoFireHold: false,
                     callbacks: {

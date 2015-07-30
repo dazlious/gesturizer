@@ -1,11 +1,11 @@
 {
     "name": "gesturizer",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "author": "Michael Duve",
     "email": "mduve@designmail.net",
     "homepage": "https://github.com/dazlious",
     "url": "https://github.com/dazlious/gesturizer",
-    "description": "An extensive framework for gestures and user interactions",
+    "description": "An extensive tiny library for gestures and user interactions",
     "license": {
         "type": "MIT",
         "url": "http://www.opensource.org/licenses/mit-license.php"
