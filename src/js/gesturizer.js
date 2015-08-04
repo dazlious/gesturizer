@@ -1,4 +1,4 @@
-/*global PointerEvent*/
+/*global PointerEvent,MSPointerEvent*/
 var gesturizer = gesturizer || (function ($) {
             "use strict";
 
@@ -153,7 +153,7 @@ var gesturizer = gesturizer || (function ($) {
 
         Gesturizer.prototype.startHandler = function (event) {
 
-            if (event.button && event.button != 0) {
+            if (event.button && event.button !== 0) {
                 return false;
             }
 
