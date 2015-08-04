@@ -153,6 +153,16 @@ In this case, your data is stored in a property called gesturizer of the respons
     });
 
 
+### preventDefault: boolean
+> default: true
+
+If the device default behaviour should be prevented - for ALL events (down, move, up, wheel)
+
+### stopPropagation: boolean
+> default: true
+
+If the event should be propagated - for ALL events (down, move, up, wheel)
+
 ### isTouchDevice: boolean
 > default: this.checkTouch()
 
