@@ -156,7 +156,11 @@ In this case, your data is stored in a property called gesturizer of the respons
 ### preventDefault: boolean
 > default: true
 
-If the device default behaviour should be prevented - for ALL events (down, move, up, wheel)
+### overwriteViewportSettings: boolean|string
+> default: false
+
+If you want to prevent zooming on the whole page or you want to change the meta-viewport content-attribute
+When set to true, the default will be: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
 
 ### stopPropagation: boolean
 > default: true
@@ -182,7 +186,7 @@ Checks if your clients device is using IE. If Gesturizers checkIETouch-function 
 If true, Gesturizer uses pointer-events instead of touch and mouse
 
 ### timeTreshold: object
-> default: {tap: 200, hold: 500, swipe: 300, flick: 50}
+> default: {tap: 200, hold: 500, swipe: 300, flick: 10}
 
 You can overwrite the defaults tresholds. If you want your swipe to be called a bit slower, because you think it is too fast, just pass
 
@@ -202,7 +206,7 @@ When turned on, you can hold mouse or finger down and the event fires after your
 
 
 ### distanceTreshold: object
-> default: {swipe: 500}
+> default: {swipe: 200}
 
 You can overwrite the defaults distance treshold for swiping. This is the distance, that you have to travel, before a swipe would be detected.
 

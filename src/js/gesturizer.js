@@ -13,11 +13,12 @@ var gesturizer = gesturizer || (function ($) {
                         tap: 200,
                         hold: 500,
                         swipe: 300,
-                        flick: 50
+                        flick: 10
                     },
                     distanceTreshold: {
-                        swipe: 250
+                        swipe: 200
                     },
+                    overwriteViewportSettings: false,
                     stopPropagation: true,
                     preventDefault: true,
                     autoFireHold: false,
@@ -70,6 +71,21 @@ var gesturizer = gesturizer || (function ($) {
                     wasPinched: false,
                     pointerIDs: {}
                 };
+
+                if (this.settings.overwriteViewportSettings) {
+                    if (typeof this.settings.overwriteViewportSettings !== "string") {
+                        this.settings.overwriteViewportSettings = "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no";
+                    }
+                    var $viewportMeta = $("meta[name=viewport]");
+                    if ($viewportMeta.length !== 0) {
+                        $viewportMeta.attr("content", this.settings.overwriteViewportSettings);
+                    } else {
+                        var meta = document.createElement('meta');
+                        meta.name = "viewport";
+                        meta.content = this.settings.overwriteViewportSettings;
+                        document.getElementsByTagName('head')[0].appendChild(meta);
+                    }
+                }
 
                 this.init();
                 this.bindEvents();
@@ -270,9 +286,9 @@ var gesturizer = gesturizer || (function ($) {
                     lastTime = (this.current.time) ? this.current.time : this.current.timeStart,
                     currentTime = event.timeStamp;
 
-                if (this.settings.isIEDevice && this.getRelativePosition(e)[0] === lastPos[0] && this.getRelativePosition(e)[1] === lastPos[1]) {
+                if (this.settings.isIEDevice && ((this.getRelativePosition(e)[0] === lastPos[0] && this.getRelativePosition(e)[1] === lastPos[1]) || (this.getRelativePosition(e)[0] === this.current.start[0] && this.getRelativePosition(e)[1] === this.current.start[1]))) {
                     return false;
-                } else if (!this.settings.isIEDevice && this.settings.isTouchDevice && this.getRelativePosition(e[0])[0] === lastPos[0] && this.getRelativePosition(e[0])[1] === lastPos[1]) {
+                } else if (!this.settings.isIEDevice && this.settings.isTouchDevice && ((this.getRelativePosition(e[0])[0] === lastPos[0] && this.getRelativePosition(e[0])[1] === lastPos[1]) || (this.getRelativePosition(e[0])[0] === lastPos[0] && this.getRelativePosition(e[0])[1] === lastPos[1]))) {
                     return false;
                 }
 
