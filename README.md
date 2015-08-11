@@ -186,7 +186,7 @@ Checks if your clients device is using IE. If Gesturizers checkIETouch-function 
 If true, Gesturizer uses pointer-events instead of touch and mouse
 
 ### timeTreshold: object
-> default: {tap: 200, hold: 500, swipe: 300, flick: 10}
+> default: {tap: 200, hold: 500, swipe: 300, flick: 25}
 
 You can overwrite the defaults tresholds. If you want your swipe to be called a bit slower, because you think it is too fast, just pass
 

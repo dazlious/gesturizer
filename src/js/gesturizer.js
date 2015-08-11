@@ -3,7 +3,7 @@ var gesturizer = gesturizer || (function ($) {
             "use strict";
 
         function Gesturizer(settings) {
-
+            
                 this.settings = {
                     container: ".gesturizer",
                     isTouchDevice: this.checkTouch(),
@@ -13,7 +13,7 @@ var gesturizer = gesturizer || (function ($) {
                         tap: 200,
                         hold: 500,
                         swipe: 300,
-                        flick: 10
+                        flick: 25
                     },
                     distanceTreshold: {
                         swipe: 200
