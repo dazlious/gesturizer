@@ -50,6 +50,10 @@ var gesturizer = gesturizer || (function ($) {
                         touch: (this.settings.isIEDevice) ? "MSPointerUp pointerup" : "touchend",
                         mouse: (this.settings.isIEDevice) ? "MSPointerUp pointerup" : "mouseup"
                     },
+                    leave: {
+                        touch: (this.settings.isIEDevice) ? "MSPointerLeave pointerleave" : "touchleave",
+                        mouse: (this.settings.isIEDevice) ? "MSPointerLeave pointerleave" : "mouseleave"
+                    },
                     scroll: this.getScrollEventName()
                 };
 
@@ -120,9 +124,7 @@ var gesturizer = gesturizer || (function ($) {
 
             Gesturizer.prototype.bindIEEvents = function () {
                 this.$container.on(this.settings.eventNames.scroll, this.scrollHandler.bind(this));
-                this.$container.on(this.settings.eventNames.start.touch, this.startHandler.bind(this));
-                this.$container.on(this.settings.eventNames.move.touch, this.moveHandler.bind(this));
-                this.$container.on(this.settings.eventNames.end.touch, this.endHandler.bind(this));
+                this.bindTouchEvents();
                 this.container.addEventListener("contextmenu", function (e) {
                     e.preventDefault();
                 }, false);
@@ -132,6 +134,7 @@ var gesturizer = gesturizer || (function ($) {
                 this.$container.on(this.settings.eventNames.start.touch, this.startHandler.bind(this));
                 this.$container.on(this.settings.eventNames.move.touch, this.moveHandler.bind(this));
                 this.$container.on(this.settings.eventNames.end.touch, this.endHandler.bind(this));
+                this.$container.on(this.settings.eventNames.leave.touch, this.endHandler.bind(this));
             };
 
             Gesturizer.prototype.bindMouseEvents = function () {
@@ -139,6 +142,7 @@ var gesturizer = gesturizer || (function ($) {
                 this.$container.on(this.settings.eventNames.start.mouse, this.startHandler.bind(this));
                 this.$container.on(this.settings.eventNames.move.mouse, this.moveHandler.bind(this));
                 this.$container.on(this.settings.eventNames.end.mouse, this.endHandler.bind(this));
+                this.$container.on(this.settings.eventNames.leave.mouse, this.endHandler.bind(this));
             };
 
             Gesturizer.prototype.scrollHandler = function (event) {
